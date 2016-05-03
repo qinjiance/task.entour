@@ -31,8 +31,7 @@ public class BeanContainer {
 		if (null == context) {
 			synchronized (BeanContainer.class) {
 				if (null == context) {
-					context = new FileSystemXmlApplicationContext(new String[] { "config/applicationContext-db.xml",
-							"config/applicationContext-remote.xml" });
+					context = new FileSystemXmlApplicationContext(new String[] { "config/applicationContext-db.xml" });
 					logger.info("Initialize FileSystemXmlApplicationContext with config file: applicationContext-db.xml,applicationContext-remote.xml");
 				}
 			}

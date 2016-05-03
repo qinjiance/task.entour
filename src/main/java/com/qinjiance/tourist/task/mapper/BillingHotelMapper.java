@@ -22,6 +22,10 @@ public interface BillingHotelMapper {
 	public int updateChargeOrder(@Param("orderId") long orderId, @Param("chargeStatus") int chargeStatus,
 			@Param("failedInfo") String failedInfo);
 
+	@Update("UPDATE billing_hotel SET charge_status = 1, charge_time = now(), transaction_num = #{transactionNum}, rgid = #{rgid} WHERE id = #{orderId} and pay_status = 1 and charge_status != 1")
+	public int updateChargeOk(@Param("orderId") long orderId, @Param("transactionNum") Long transactionNum,
+			@Param("rgid") Long rgid);
+
 	@Update("UPDATE billing_hotel SET charge_failed_info = #{failedInfo}, charge_time = now() WHERE id = #{orderId} and pay_status = 1 and charge_status != 1")
 	public int updateFailedInfo(@Param("orderId") long orderId, @Param("failedInfo") String failedInfo);
 

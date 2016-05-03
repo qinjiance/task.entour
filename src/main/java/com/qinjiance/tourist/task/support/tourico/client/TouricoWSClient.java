@@ -194,7 +194,7 @@ public class TouricoWSClient {
 			throw new TaskManagerException("网络通信错误，请稍后再试");
 		} catch (IHotelFlow_BookHotelV3_WSFault_FaultMessage e) {
 			logger.error("IHotelFlow_BookHotelV3_WSFault_FaultMessage: ", e);
-			throw new TaskManagerException("网络通信错误，请稍后再试");
+			throw new TaskManagerException(e.getMessage());
 		}
 		return hs;
 	}

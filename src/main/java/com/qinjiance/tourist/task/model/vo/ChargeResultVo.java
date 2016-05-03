@@ -26,7 +26,7 @@ public class ChargeResultVo implements Serializable {
 
 	private int code;
 	private String message;
-	private ChargeResultEnum chargeResultEnum;
+	private Object result;
 
 	/**
 	 * 
@@ -34,16 +34,16 @@ public class ChargeResultVo implements Serializable {
 	public ChargeResultVo() {
 	}
 
-	public ChargeResultVo(int code, String message, ChargeResultEnum chargeResultEnum) {
+	public ChargeResultVo(int code, String message, ChargeResultEnum chargeResultEnum, Object result) {
 		super();
 		this.code = code;
 		this.message = message;
-		this.chargeResultEnum = chargeResultEnum;
+		this.result = result;
 	}
 
-	public ChargeResultVo(ChargeResultEnum chargeResultEnum) {
+	public ChargeResultVo(ChargeResultEnum chargeResultEnum, Object result) {
 		super();
-		this.chargeResultEnum = chargeResultEnum;
+		this.result = result;
 		this.code = chargeResultEnum.getResultStatus();
 		this.message = chargeResultEnum.getErrMsg();
 	}
@@ -79,18 +79,18 @@ public class ChargeResultVo implements Serializable {
 	}
 
 	/**
-	 * @return the chargeResultEnum
+	 * @return the result
 	 */
-	public ChargeResultEnum getChargeResultEnum() {
-		return chargeResultEnum;
+	public Object getResult() {
+		return result;
 	}
 
 	/**
-	 * @param chargeResultEnum
-	 *            the chargeResultEnum to set
+	 * @param result
+	 *            the result to set
 	 */
-	public void setChargeResultEnum(ChargeResultEnum chargeResultEnum) {
-		this.chargeResultEnum = chargeResultEnum;
+	public void setResult(Object result) {
+		this.result = result;
 	}
 
 	/**

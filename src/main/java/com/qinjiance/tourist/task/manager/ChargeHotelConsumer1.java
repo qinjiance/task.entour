@@ -14,6 +14,7 @@ import com.qinjiance.tourist.task.constants.ChargeStatus;
 import com.qinjiance.tourist.task.constants.Constants;
 import com.qinjiance.tourist.task.mapper.BillingHotelMapper;
 import com.qinjiance.tourist.task.model.BillingHotel;
+import com.qinjiance.tourist.task.model.vo.BookHotelResult;
 import com.qinjiance.tourist.task.model.vo.ChargeResultVo;
 
 /**
@@ -53,14 +54,15 @@ public class ChargeHotelConsumer1 implements Runnable {
 					if (bo != null) {
 						long orderId = bo.getId();
 						ChargeResultVo chargeResult = chargeHotelManager.commonCharge(bo);
-						if (chargeResult.getChargeResultEnum() == ChargeResultEnum.ORDER_IS_CHARGED) {
+						if (chargeResult.getCode() == ChargeResultEnum.ORDER_IS_CHARGED.getResultStatus()) {
 							StringBuilder sb = new StringBuilder();
 							sb.append("charge hotel ").append(bo.getId()).append(" failed, order is already charged.");
 							logger.info(sb.toString());
-						} else if (chargeResult.getChargeResultEnum() == ChargeResultEnum.SUCCESS) {
+						} else if (chargeResult.getCode() == ChargeResultEnum.SUCCESS.getResultStatus()) {
 							// 充值已成功
-							int result = billingHotelMapper.updateChargeOrder(orderId,
-									ChargeStatus.CHARGED.getStatus(), null);
+							BookHotelResult bookResult = (BookHotelResult) chargeResult.getResult();
+							int result = billingHotelMapper.updateChargeOk(orderId, bookResult.getTransNum()
+									.longValue(), bookResult.getRgid().longValue());
 
 							StringBuilder sb = new StringBuilder();
 							sb.append("charge hotel ").append(bo.getId())

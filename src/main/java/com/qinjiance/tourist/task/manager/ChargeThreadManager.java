@@ -34,9 +34,9 @@ public class ChargeThreadManager implements Runnable {
 
 	private BillingHotelMapper billingHotelMapper;
 
-	public ChargeThreadManager(BillingHotelMapper billingOrderMapper, ChargeHotelManager chargeHotelManager,
+	public ChargeThreadManager(BillingHotelMapper billingHotelMapper, ChargeHotelManager chargeHotelManager,
 			ExecutorService execs) {
-		this.billingHotelMapper = billingOrderMapper;
+		this.billingHotelMapper = billingHotelMapper;
 		this.chargeHotelManager = chargeHotelManager;
 		this.execs = execs;
 	}

@@ -14,6 +14,7 @@ import com.qinjiance.tourist.task.constants.ChargeStatus;
 import com.qinjiance.tourist.task.constants.Constants;
 import com.qinjiance.tourist.task.mapper.BillingHotelMapper;
 import com.qinjiance.tourist.task.model.BillingHotel;
+import com.qinjiance.tourist.task.model.vo.BookHotelResult;
 import com.qinjiance.tourist.task.model.vo.ChargeResultVo;
 
 /**
@@ -30,7 +31,7 @@ public class ChargeHotelConsumer2 implements Runnable {
 
 	private Logger logger = LoggerFactory.getLogger(ChargeHotelConsumer2.class);
 
-	private BillingHotelMapper billingOrderMapper;
+	private BillingHotelMapper billingHotelMapper;
 
 	private ChargeHotelManager mobileChargeManager;
 
@@ -39,7 +40,7 @@ public class ChargeHotelConsumer2 implements Runnable {
 
 	public ChargeHotelConsumer2(BillingHotelMapper billingOrderMapper, ChargeHotelManager mobileChargeManager) {
 		super();
-		this.billingOrderMapper = billingOrderMapper;
+		this.billingHotelMapper = billingOrderMapper;
 		this.mobileChargeManager = mobileChargeManager;
 	}
 
@@ -53,14 +54,15 @@ public class ChargeHotelConsumer2 implements Runnable {
 					if (bo != null) {
 						long orderId = bo.getId();
 						ChargeResultVo chargeResult = mobileChargeManager.commonCharge(bo);
-						if (chargeResult.getChargeResultEnum() == ChargeResultEnum.ORDER_IS_CHARGED) {
+						if (chargeResult.getCode() == ChargeResultEnum.ORDER_IS_CHARGED.getResultStatus()) {
 							StringBuilder sb = new StringBuilder();
 							sb.append("charge order ").append(bo.getId()).append(" failed, order is already charged.");
 							logger.info(sb.toString());
-						} else if (chargeResult.getChargeResultEnum() == ChargeResultEnum.SUCCESS) {
+						} else if (chargeResult.getCode() == ChargeResultEnum.SUCCESS.getResultStatus()) {
 							// 充值已成功
-							int result = billingOrderMapper.updateChargeOrder(orderId,
-									ChargeStatus.CHARGED.getStatus(), null);
+							BookHotelResult bookResult = (BookHotelResult) chargeResult.getResult();
+							int result = billingHotelMapper.updateChargeOk(orderId, bookResult.getTransNum()
+									.longValue(), bookResult.getRgid().longValue());
 
 							StringBuilder sb = new StringBuilder();
 							sb.append("charge order ").append(bo.getId())
@@ -76,18 +78,18 @@ public class ChargeHotelConsumer2 implements Runnable {
 
 							if (times == null) {
 								// 更新失败原因
-								billingOrderMapper.updateChargeOrder(bo.getId(), ChargeStatus.PROCESSING.getStatus(),
+								billingHotelMapper.updateChargeOrder(bo.getId(), ChargeStatus.PROCESSING.getStatus(),
 										"通知" + notifyTimes + "次-" + chargeResult.getMessage());
 								countMap.put(orderId, new AtomicInteger(1));
 								orderList.add(bo);
 							} else if (times.getAndIncrement() >= Constants.NOTIFY_TIMES_COMSUMER2) {
 								// 充值失败
-								billingOrderMapper.updateChargeOrder(bo.getId(), ChargeStatus.FAILED.getStatus(), "通知"
+								billingHotelMapper.updateChargeOrder(bo.getId(), ChargeStatus.FAILED.getStatus(), "通知"
 										+ notifyTimes + "次-" + chargeResult.getMessage());
 								countMap.remove(orderId);
 							} else {
 								// 更新失败原因
-								billingOrderMapper.updateChargeOrder(bo.getId(), ChargeStatus.PROCESSING.getStatus(),
+								billingHotelMapper.updateChargeOrder(bo.getId(), ChargeStatus.PROCESSING.getStatus(),
 										"通知" + notifyTimes + "次-" + chargeResult.getMessage());
 								orderList.add(bo);
 							}
@@ -110,11 +112,11 @@ public class ChargeHotelConsumer2 implements Runnable {
 	}
 
 	public BillingHotelMapper getBillingOrderMapper() {
-		return billingOrderMapper;
+		return billingHotelMapper;
 	}
 
 	public void setBillingOrderMapper(BillingHotelMapper billingOrderMapper) {
-		this.billingOrderMapper = billingOrderMapper;
+		this.billingHotelMapper = billingOrderMapper;
 	}
 
 	public ChargeHotelManager getMobileChargeManager() {

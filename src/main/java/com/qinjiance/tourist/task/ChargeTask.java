@@ -7,15 +7,14 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.qinjiance.tourist.task.manager.ChargeHotelManager;
+import ch.qos.logback.core.joran.spi.JoranException;
+
 import com.qinjiance.tourist.task.manager.ChargeHotelConsumer1;
 import com.qinjiance.tourist.task.manager.ChargeHotelConsumer2;
+import com.qinjiance.tourist.task.manager.ChargeHotelManager;
 import com.qinjiance.tourist.task.manager.ChargeThreadManager;
-import com.qinjiance.tourist.task.mapper.BillingGameConfigMapper;
 import com.qinjiance.tourist.task.mapper.BillingHotelMapper;
 import com.qinjiance.tourist.task.util.LogBackConfigLoader;
-
-import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
  * @author "Jiance Qin"
@@ -32,8 +31,6 @@ public class ChargeTask {
 	private static final Logger logger = LoggerFactory.getLogger(ChargeTask.class);
 
 	private static ExecutorService execs = Executors.newCachedThreadPool();
-	// private static ScheduledThreadPoolExecutor schedule = new
-	// ScheduledThreadPoolExecutor(2);
 
 	static {
 		try {
@@ -47,20 +44,19 @@ public class ChargeTask {
 
 	public static void main(String[] args) {
 
-		BillingHotelMapper billingOrderMapper = (BillingHotelMapper) BeanContainer.getBean("billingOrderMapper");
-		ChargeHotelManager chargeManager = (ChargeHotelManager) BeanContainer.getBean("chargeManager");
-		BillingGameConfigMapper billingGameConfigMapper = (BillingGameConfigMapper) BeanContainer
-				.getBean("billingGameConfigMapper");
+		BillingHotelMapper billingHotelMapper = (BillingHotelMapper) BeanContainer.getBean("billingHotelMapper");
+		ChargeHotelManager chargeHotelManager = (ChargeHotelManager) BeanContainer.getBean("chargeHotelManager");
+		
+		logger.info("init bean success...");
 
 		// start the scan app thread
-		ChargeThreadManager threadManager = new ChargeThreadManager(billingOrderMapper, billingGameConfigMapper,
-				chargeManager, execs);
+		ChargeThreadManager threadManager = new ChargeThreadManager(billingHotelMapper, chargeHotelManager, execs);
 		execs.execute(threadManager);
 
 		// second level queue
-		ChargeHotelConsumer1 mcoConsumer1 = new ChargeHotelConsumer1(billingOrderMapper, chargeManager);
+		ChargeHotelConsumer1 mcoConsumer1 = new ChargeHotelConsumer1(billingHotelMapper, chargeHotelManager);
 
-		ChargeHotelConsumer2 mcoConsumer2 = new ChargeHotelConsumer2(billingOrderMapper, chargeManager);
+		ChargeHotelConsumer2 mcoConsumer2 = new ChargeHotelConsumer2(billingHotelMapper, chargeHotelManager);
 
 		execs.execute(mcoConsumer1);
 		execs.execute(mcoConsumer2);
