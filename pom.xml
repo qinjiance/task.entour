@@ -11,6 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
+		<axis2>1.6.3</axis2>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring>3.2.2.RELEASE</spring>
 		<httpclient>4.3</httpclient>
@@ -240,6 +241,11 @@
 			<version>1.0.6</version>
 		</dependency>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
 			<groupId>com.laohu</groupId>
 			<artifactId>commons.laohu.module</artifactId>
 			<version>3.3.28</version>
@@ -256,6 +262,37 @@
 					<artifactId>asm</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<!-- axis2 -->
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-kernel</artifactId>
+		    <version>${axis2}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-adb</artifactId>
+		    <version>${axis2}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-adb-codegen</artifactId>
+		    <version>${axis2}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-transport-jms</artifactId>
+		    <version>${axis2}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-transport-local</artifactId>
+		    <version>${axis2}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-transport-http</artifactId>
+		    <version>${axis2}</version>
 		</dependency>
 	</dependencies>
 	

@@ -18,7 +18,7 @@ public class BillingHotel extends BaseObject {
 	private String username;
 	private Long userId;
 	private Long transactionNum;
-	private Long reservationId;
+	private Long rgid;
 	private String hotelCountry;
 	private String hotelCity;
 	private Integer hotelId;
@@ -53,6 +53,20 @@ public class BillingHotel extends BaseObject {
 	private Date createTime;
 	private Date payTime;
 	private Date chargeTime;
+
+	/**
+	 * @return the rgid
+	 */
+	public Long getRgid() {
+		return rgid;
+	}
+
+	/**
+	 * @param rgid the rgid to set
+	 */
+	public void setRgid(Long rgid) {
+		this.rgid = rgid;
+	}
 
 	/**
 	 * @return the roomInfo
@@ -217,21 +231,6 @@ public class BillingHotel extends BaseObject {
 	 */
 	public void setTransactionNum(Long transactionNum) {
 		this.transactionNum = transactionNum;
-	}
-
-	/**
-	 * @return the reservationId
-	 */
-	public Long getReservationId() {
-		return reservationId;
-	}
-
-	/**
-	 * @param reservationId
-	 *            the reservationId to set
-	 */
-	public void setReservationId(Long reservationId) {
-		this.reservationId = reservationId;
 	}
 
 	/**
